@@ -1149,7 +1149,7 @@ function updateCredits(){
 async function buyPack(packId, el){
   el.classList.add('loading');
   try {
-    const res  = await fetch('/.netlify/functions/create-checkout',{
+    const res  = await fetch('https://genios-backend-production.up.railway.app/create-checkout',{
       method:'POST', headers:{'Content-Type':'application/json'},
       body:JSON.stringify({packId})
     });
@@ -1171,7 +1171,7 @@ async function startSub(){
   const btn = document.getElementById('subBtn');
   btn.disabled = true; btn.textContent = '⏳ Chargement...';
   try {
-    const res  = await fetch('/.netlify/functions/create-subscription',{
+    const res  = await fetch('https://genios-backend-production.up.railway.app/create-subscription',{
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({})
     });
