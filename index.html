@@ -1146,49 +1146,20 @@ function updateCredits(){
 // ════════════════════════════════════════
 // STRIPE PAYMENTS
 // ════════════════════════════════════════
-async function buyPack(packId, el){
-  el.classList.add('loading');
-  try {
-    const res  = await fetch('https://genios-backend-production.up.railway.app/create-checkout',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({packId})
-    });
-    const data = await res.json();
-    if(data.url) window.location.href = data.url;
-    else { toast('⚠ '+(data.error||'Erreur paiement')); el.classList.remove('loading'); }
-  } catch {
-    // Mode démo (sans backend) — simuler achat
-    const amounts = {starter:10, pro:50, elite:200};
-    const credits = amounts[packId] || 0;
-    S.credits += credits; persist(); updateCredits();
-    el.classList.remove('loading');
-    toast(`✓ +${credits} crédits activés (mode démo) !`);
-    showPayBanner('ok',`✓ +${credits} crédits ajoutés à ton compte.`);
-  }
+// ── GUMROAD — Paiement simplifié ──
+const GUMROAD_URL = 'https://thisbeatzz.gumroad.com/l/lthql';
+
+function buyPack(packId, el){
+  window.open(GUMROAD_URL + '?wanted=true', '_blank');
+  toast('↗ Redirection vers le paiement sécurisé...');
 }
 
-async function startSub(){
+function startSub(){
   const btn = document.getElementById('subBtn');
-  btn.disabled = true; btn.textContent = '⏳ Chargement...';
-  try {
-    const res  = await fetch('https://genios-backend-production.up.railway.app/create-subscription',{
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({})
-    });
-    const data = await res.json();
-    if(data.url) window.location.href = data.url;
-    else {
-      btn.disabled=false; btn.textContent='🚀 Essayer PRO gratuitement';
-      toast('⚠ '+(data.error||'Erreur abonnement'));
-    }
-  } catch {
-    // Mode démo
-    S.isPro = true; S.credits = 999999; persist(); updateCredits();
-    btn.disabled=false; btn.textContent='🚀 Essayer PRO gratuitement';
-    toast('👑 PRO activé (mode démo) !');
-    showPayBanner('ok','👑 Bienvenue dans GÉNIOS PRO ! Accès illimité activé.');
-    switchTab('generate');
-  }
+  btn.textContent = '↗ Vers le paiement...';
+  setTimeout(() => { btn.textContent = '🚀 Essayer PRO gratuitement'; }, 3000);
+  window.open(GUMROAD_URL + '?wanted=true', '_blank');
+  toast('↗ Redirection vers GÉNIOS PRO...');
 }
 
 function checkPayment(){
